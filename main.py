@@ -24,7 +24,12 @@ class MainWindow(Ui_MainWindow):
 
         self.btnGenerate.clicked.connect(self.on_btn_clicked)
 
+        self.__A = 0
+        self.__S = 0
+
     def spinbox_changed(self):
+        print("test: spinbox_changed")
+
         # Переменные из DoubleSpinBox
         self.__P = self.doubleSpinBoxP.value()
         self.__V = self.doubleSpinBoxV.value()
@@ -38,25 +43,32 @@ class MainWindow(Ui_MainWindow):
             self.__T = 1
 
         # Считаем нижную границу пароля S*
-        self.__S = math.ceil(math.fabs((V * T) / P))
-        print(self.__S)
+        self.__S = math.ceil(math.fabs((self.__V * self.__T) / self.__P))
+        print(f"S = {self.__S}")
         self.labelNumS.setText(str(self.__S))
 
         # Функция для счета длины пароля L
         self.__calculateL()
 
     def on_checkbox_state_changed(self):
+        print("test: on_checkbox_state_changed")
+
         # Переменные из CheckBox
-        self.__latCap = self.checkLatCap.value()
-        self.__latUpper = self.checkLatUpper.value()
-        self.__rusCap = self.checkRusCap.value()
-        self.__rusUpper = self.checkRusUpper.value()
-        self.__simbols = self.checkSimbols.value()
-        self.__digits = self.checkDigits.value()
+        # self.__latCap = self.checkLatCap.value()
+        # self.__latUpper = self.checkLatUpper.value()
+        # self.__rusCap = self.checkRusCap.value()
+        # self.__rusUpper = self.checkRusUpper.value()
+        # self.__simbols = self.checkSimbols.value()
+        # self.__digits = self.checkDigits.value()
 
         # Считаем мощность алфавита A
-        self.__A = latCap * 26 + latUpper * 26 + rusCap * 33 + rusUpper * 33 + symbols * 33 + digits * 10
-        print(self.__A)
+        self.__A = self.checkLatCap.isChecked() * 26 + \
+                   self.checkLatUpper.isChecked() * 26 + \
+                   self.checkRusCap.isChecked() * 33 + \
+                   self.checkRusUpper.isChecked() * 33 + \
+                   self.checkSimbols.isChecked() * 33 + \
+                   self.checkDigits.isChecked() * 10
+        print(f"A = {self.__A}")
 
         # Вывод пароля в текстовое поле
         self.labelNumA.setText(str(self.__A))
@@ -65,12 +77,16 @@ class MainWindow(Ui_MainWindow):
         self.__calculateL()
 
     def __calculateL(self):
+        print("test: __calculateL")
+
         # Если поля пустые
         if not(self.__S and self.__A):
             return
 
         # Считаем длину пароля L
-        self.__L = math.log(self.__S, self.__A)
+        self.__L = math.ceil(math.log(self.__S, self.__A))
+
+        print(f"L = {self.__L}")
 
         # Выводим
         self.labelNumL.setText(str(self.__L))
@@ -81,17 +97,17 @@ class MainWindow(Ui_MainWindow):
 
         # Пул символов, из которых будет сгенерирован пароль
         pool = ""
-        if self.__latCap:
+        if self.checkLatCap.isChecked():
             pool += string.ascii_uppercase
-        if self.__latUpper:
+        if self.checkLatUpper.isChecked():
             pool += string.ascii_lowercase
-        if self.__rusCap:
+        if self.checkRusCap.isChecked():
             pool += 'АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ'
-        if self.__rusUpper:
+        if self.checkRusUpper.isChecked():
             pool += 'абвгдеёжзийклмнопрстуфхцчшщъыьэюя'
-        if self.__simbols:
+        if self.checkSimbols.isChecked():
             pool += "!@#$%^&*()_+-=[]{}|;:,.<>?`~"
-        if self.__digits:
+        if self.checkDigits.isChecked():
             pool += string.digits
 
         if (pool):
@@ -109,7 +125,7 @@ def main():
     mainWindow = QtWidgets.QMainWindow()
     ui = MainWindow()
     ui.setupUi(mainWindow)
-    ui.spinbox_changed()
+    ui.setup_connections()
     mainWindow.show()
     sys.exit(app.exec())
 
