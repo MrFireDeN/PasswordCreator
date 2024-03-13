@@ -63,7 +63,7 @@ class Ui_MainWindow(object):
         self.doubleSpinBoxP = QtWidgets.QDoubleSpinBox(parent=self.widgetIn)
         self.doubleSpinBoxP.setDecimals(3)
         self.doubleSpinBoxP.setMinimum(0.001)
-        self.doubleSpinBoxP.setMaximum(99999999999.0)
+        self.doubleSpinBoxP.setMaximum(1.0)
         self.doubleSpinBoxP.setObjectName("doubleSpinBoxP")
         self.gridLayout_4.addWidget(self.doubleSpinBoxP, 0, 3, 1, 1)
         self.doubleSpinBoxV = QtWidgets.QDoubleSpinBox(parent=self.widgetIn)

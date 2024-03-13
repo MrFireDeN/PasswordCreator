@@ -26,6 +26,7 @@ class MainWindow(Ui_MainWindow):
 
         self.__A = 0
         self.__S = 0
+        self.__L = 0
 
     def spinbox_changed(self):
         print("test: spinbox_changed")
